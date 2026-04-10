@@ -3,17 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polish-German Joint Seminar</title>
+    <title>Gdynia Joint Seminar</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-color: #000000;
-            --panel-bg: #0f0f0f;
-            --hover-bg: #2a2a2a;
-            --text-main: #ffffff;
-            --text-muted: #a0a0a0;
-            --accent-color: #ff6b6b;
-            --border-color: #333333;
+            /* Palette based on the Gdynia brochure */
+            --bg-color: #dce8f5;        
+            --panel-bg: #050a44;        
+            --hover-bg: #111a6a;        
+            --text-main: #ffffff;       
+            --text-dark: #050a44;       
+            --text-muted: #a4bdfc;      
+            --accent-color: #ff5e00;    
+            --border-color: #2a358c;    
+            
             --nav-width: 250px;
             --bottom-nav-height: 70px;
             --top-bar-height: 60px;
@@ -28,24 +31,27 @@
 
         body {
             background-color: var(--bg-color);
-            color: var(--text-main);
+            color: var(--text-dark);
             display: flex;
             height: 100vh;
             overflow: hidden;
         }
 
+        /* --- Top Bar --- */
         .top-bar {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             height: var(--top-bar-height);
-            background-color: var(--bg-color);
+            background-color: var(--panel-bg);
+            color: var(--text-main);
             display: flex;
             align-items: center;
             padding: 0 20px;
             z-index: 100;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 4px solid var(--accent-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         .menu-toggle {
@@ -59,9 +65,12 @@
 
         .page-title {
             font-size: 20px;
-            font-weight: 500;
+            font-weight: 800; 
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
+        /* --- Side Menu --- */
         .side-menu {
             position: fixed;
             top: var(--top-bar-height);
@@ -72,9 +81,10 @@
             transition: left 0.3s ease;
             z-index: 90;
             overflow-y: auto;
-            border-right: 1px solid var(--border-color);
+            border-right: 2px solid var(--accent-color);
             display: flex;
             flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
         }
 
         .side-menu.active {
@@ -94,12 +104,14 @@
             color: var(--text-main);
             text-decoration: none;
             font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s, color 0.2s;
         }
 
         .menu-item:hover, .menu-item.active {
             background-color: var(--hover-bg);
+            color: var(--accent-color);
         }
 
         .menu-item i {
@@ -107,7 +119,7 @@
             font-size: 20px;
             margin-right: 15px;
             text-align: center;
-            color: var(--text-muted);
+            color: var(--accent-color);
         }
 
         .menu-footer {
@@ -115,8 +127,10 @@
             font-size: 12px;
             color: var(--text-muted);
             text-align: center;
+            border-top: 1px solid var(--border-color);
         }
 
+        /* --- Main Content Area --- */
         .main-content {
             flex-grow: 1;
             margin-top: var(--top-bar-height);
@@ -134,18 +148,23 @@
             }
         }
 
+        /* --- Schedule Cards --- */
         .day-section {
             background-color: var(--panel-bg);
-            border-radius: 10px;
-            margin-bottom: 20px;
+            color: var(--text-main);
+            border-radius: 12px;
+            margin-bottom: 25px;
             overflow: hidden;
+            box-shadow: 0 4px 15px rgba(5, 10, 68, 0.2);
+            border: 2px solid var(--panel-bg);
         }
 
         .day-header {
             display: flex;
             align-items: baseline;
             padding: 15px 20px;
-            border-bottom: 1px solid var(--border-color);
+            background-color: var(--accent-color);
+            color: white;
         }
 
         .day-header i {
@@ -154,14 +173,17 @@
         }
 
         .day-title {
-            font-size: 20px;
-            font-weight: bold;
+            font-size: 22px;
+            font-weight: 900;
+            text-transform: uppercase;
             margin-right: 15px;
+            letter-spacing: 1px;
         }
 
         .day-date {
-            color: var(--text-muted);
+            color: #ffe0cc; 
             font-size: 14px;
+            font-weight: bold;
         }
 
         .event-list {
@@ -173,7 +195,7 @@
             display: flex;
             justify-content: space-between;
             padding: 15px 20px;
-            border-bottom: 1px solid #1a1a1a;
+            border-bottom: 1px solid var(--border-color);
         }
         
         .event-item:last-child {
@@ -181,10 +203,11 @@
         }
 
         .event-time {
-            font-size: 14px;
-            width: 90px;
+            font-size: 15px;
+            font-weight: bold;
+            width: 100px;
             flex-shrink: 0;
-            color: var(--text-muted);
+            color: var(--accent-color);
         }
 
         .event-details {
@@ -194,32 +217,49 @@
         }
 
         .event-name {
-            font-weight: 500;
+            font-weight: 600;
             margin-bottom: 5px;
             display: flex;
             align-items: center;
             justify-content: flex-end;
             gap: 8px;
             line-height: 1.4;
+            font-size: 15px;
         }
 
         .event-location {
-            color: var(--accent-color);
-            font-size: 12px;
+            color: var(--text-muted);
+            font-size: 13px;
         }
 
+        /* --- Full Bleed Map Class --- */
+        .full-bleed-map {
+            margin: -20px; /* Removes the 20px padding from the main-content wrapper */
+            height: calc(100vh - var(--top-bar-height) - var(--bottom-nav-height));
+            background-color: #e5e3df; /* Standard maps background color */
+        }
+
+        .full-bleed-map iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        /* --- Bottom Navigation --- */
         .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
             height: var(--bottom-nav-height);
-            background-color: var(--bg-color);
+            background-color: var(--panel-bg);
             display: flex;
             justify-content: space-around;
             align-items: center;
-            border-top: 1px solid var(--border-color);
+            border-top: 4px solid var(--accent-color);
             z-index: 100;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
         }
 
         .bottom-nav-item {
@@ -236,18 +276,19 @@
         }
 
         .bottom-nav-item i {
-            font-size: 20px;
+            font-size: 22px;
             margin-bottom: 5px;
         }
 
         .bottom-nav-item span {
             font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
         }
 
         .bottom-nav-item.active {
             color: var(--accent-color);
-            border-top: 2px solid var(--accent-color);
-            margin-top: -2px;
+            background-color: rgba(255, 94, 0, 0.1);
         }
     </style>
 </head>
@@ -257,17 +298,17 @@
         <button class="menu-toggle" id="menuToggleBtn">
             <i class="fas fa-bars"></i>
         </button>
-        <div class="page-title" id="pageTitle">Schedule</div>
+        <div class="page-title" id="pageTitle">PLAN</div>
     </div>
 
     <nav class="side-menu" id="sideMenu">
         <ul class="menu-list">
-            <li><a class="menu-item active" data-target="schedule"><i class="far fa-calendar-alt"></i> Schedule</a></li>
-            <li><a class="menu-item" data-target="organizers"><i class="fas fa-users"></i> Contact</a></li>
-            <li><a class="menu-item" data-target="map"><i class="fas fa-map-marker-alt"></i> Map</a></li>
+            <li><a class="menu-item active" data-target="schedule"><i class="fas fa-calendar-alt"></i> PLAN</a></li>
+            <li><a class="menu-item" data-target="organizers"><i class="fas fa-info-circle"></i> INFO & CONTACT</a></li>
+            <li><a class="menu-item" data-target="map"><i class="fas fa-map-marker-alt"></i> MAP</a></li>
         </ul>
         <div class="menu-footer">
-            Joint Seminar App
+            Welcome to Gdynia App
         </div>
     </nav>
 
@@ -283,15 +324,15 @@
                     <div class="event-item">
                         <div class="event-time">12:50</div>
                         <div class="event-details">
-                            <div class="event-name">Arrival and accommodation <i class="fas fa-suitcase-rolling"></i></div>
-                            <div class="event-location">GMU Hostel</div>
+                            <div class="event-name">Arrival and accommodation <i class="fas fa-bed"></i></div>
+                            <div class="event-location">UMG Hostel</div>
                         </div>
                     </div>
                     <div class="event-item">
                         <div class="event-time">15:00-16:30</div>
                         <div class="event-details">
                             <div class="event-name">Lunch <i class="fas fa-utensils"></i></div>
-                            <div class="event-location">GMU canteen</div>
+                            <div class="event-location">UMG canteen</div>
                         </div>
                     </div>
                 </div>
@@ -307,20 +348,20 @@
                         <div class="event-time">09:00-09:45</div>
                         <div class="event-details">
                             <div class="event-name">Breakfast <i class="fas fa-coffee"></i></div>
-                            <div class="event-location">GMU canteen</div>
+                            <div class="event-location">UMG canteen</div>
                         </div>
                     </div>
                     <div class="event-item">
                         <div class="event-time">10:00-11:00</div>
                         <div class="event-details">
                             <div class="event-name">Official Welcome & Presentations <i class="fas fa-handshake"></i></div>
-                            <div class="event-location">GMU Authorities & Student Parliament</div>
+                            <div class="event-location">UMG Authorities & Student Parliament</div>
                         </div>
                     </div>
                     <div class="event-item">
                         <div class="event-time">11:30-13:00</div>
                         <div class="event-details">
-                            <div class="event-name">Managing Cultural Diversity in Europe, part I <i class="fas fa-chalkboard-teacher"></i></div>
+                            <div class="event-name">Managing Cultural Diversity in Europe, part I <i class="fas fa-globe-europe"></i></div>
                             <div class="event-location">Prof. Gerhard M. Feldmeier | Room – CSR, 2nd floor</div>
                         </div>
                     </div>
@@ -335,7 +376,7 @@
                         <div class="event-time">15:00-16:00</div>
                         <div class="event-details">
                             <div class="event-name">Lunch with University and Faculty Authorities <i class="fas fa-utensils"></i></div>
-                            <div class="event-location">GMU canteen</div>
+                            <div class="event-location">UMG canteen</div>
                         </div>
                     </div>
                     <div class="event-item">
@@ -358,13 +399,13 @@
                         <div class="event-time">09:00-09:45</div>
                         <div class="event-details">
                             <div class="event-name">Breakfast <i class="fas fa-coffee"></i></div>
-                            <div class="event-location">GMU canteen</div>
+                            <div class="event-location">UMG canteen</div>
                         </div>
                     </div>
                     <div class="event-item">
                         <div class="event-time">10:00-11:30</div>
                         <div class="event-details">
-                            <div class="event-name">Managing Cultural Diversity in Europe, part II <i class="fas fa-chalkboard-teacher"></i></div>
+                            <div class="event-name">Managing Cultural Diversity in Europe, part II <i class="fas fa-globe-europe"></i></div>
                             <div class="event-location">Prof. Gerhard M. Feldmeier | Room – CSR, 2nd floor</div>
                         </div>
                     </div>
@@ -372,14 +413,14 @@
                         <div class="event-time">11:45-13:30</div>
                         <div class="event-details">
                             <div class="event-name">The role of interpersonal communication in business <i class="fas fa-comments"></i></div>
-                            <div class="event-location">PhD Agnieszka Czarnecką | Room – CSR, 2nd floor</div>
+                            <div class="event-location">PhD Agnieszka Czarnecka | Room – CSR, 2nd floor</div>
                         </div>
                     </div>
                     <div class="event-item">
                         <div class="event-time">13:45-14:45</div>
                         <div class="event-details">
                             <div class="event-name">Lunch <i class="fas fa-utensils"></i></div>
-                            <div class="event-location">GMU canteen</div>
+                            <div class="event-location">UMG canteen</div>
                         </div>
                     </div>
                 </div>
@@ -395,13 +436,13 @@
                         <div class="event-time">09:00-09:30</div>
                         <div class="event-details">
                             <div class="event-name">Breakfast <i class="fas fa-coffee"></i></div>
-                            <div class="event-location">GMU canteen</div>
+                            <div class="event-location">UMG canteen</div>
                         </div>
                     </div>
                     <div class="event-item">
                         <div class="event-time">10:30-14:30</div>
                         <div class="event-details">
-                            <div class="event-name">Travel by train to Gdańsk & Sightseeing <i class="fas fa-train"></i></div>
+                            <div class="event-name">Travel by train & Sightseeing <i class="fas fa-train"></i></div>
                             <div class="event-location">Gdańsk Old Town</div>
                         </div>
                     </div>
@@ -418,7 +459,7 @@
                         <div class="event-time">08:00-08:45</div>
                         <div class="event-details">
                             <div class="event-name">Breakfast <i class="fas fa-coffee"></i></div>
-                            <div class="event-location">GMU canteen</div>
+                            <div class="event-location">UMG canteen</div>
                         </div>
                     </div>
                     <div class="event-item">
@@ -462,7 +503,7 @@
                         <div class="event-time">07:00-07:45</div>
                         <div class="event-details">
                             <div class="event-name">Breakfast <i class="fas fa-coffee"></i></div>
-                            <div class="event-location">GMU canteen</div>
+                            <div class="event-location">UMG canteen</div>
                         </div>
                     </div>
                     <div class="event-item">
@@ -506,7 +547,7 @@
                         <div class="event-time">07:00</div>
                         <div class="event-details">
                             <div class="event-name">Departure with Lunch-Box <i class="fas fa-plane-departure"></i></div>
-                            <div class="event-location">From GMU Hostel to Gdańsk airport</div>
+                            <div class="event-location">From UMG Hostel to Gdańsk airport</div>
                         </div>
                     </div>
                     <div class="event-item">
@@ -522,17 +563,25 @@
         </div>
 
         <div id="view-organizers" class="view-section" style="display: none;">
-            <h2>Contact & Organizers Content Goes Here</h2>
+            <div class="day-section" style="padding: 20px;">
+                <h2 style="color: var(--accent-color); margin-bottom: 15px;">ADDRESSES AND CONTACTS</h2>
+                <p><strong><i class="fas fa-phone-alt"></i> Emergency numbers:</strong></p>
+                <ul style="list-style: none; padding-left: 20px; margin-bottom: 20px; color: var(--text-muted);">
+                    <li>112 - General emergency number</li>
+                    <li>999 - Ambulance</li>
+                    <li>998 - Fire Brigade</li>
+                    <li>997 - Police</li>
+                </ul>
+
+                <p><strong><i class="fas fa-map-marker-alt"></i> UMG Hostel address:</strong></p>
+                <p style="padding-left: 20px; margin-bottom: 20px; color: var(--text-muted);">Gdynia ul. Maurycego Beniowskiego 20/22</p>
+
+                <p><strong><i class="fas fa-map-marker-alt"></i> The sports hall address:</strong></p>
+                <p style="padding-left: 20px; color: var(--text-muted);">Gdynia ul. Morska 81-87</p>
+            </div>
         </div>
 
-        <div id="view-map" class="view-section" style="display: none; height: 100%;">
-    <div class="day-section" style="height: calc(100vh - 180px); display: flex; flex-direction: column;">
-        <div class="day-header">
-            <i class="fas fa-map-marked-alt"></i>
-            <span class="day-title">Event Map</span>
-        </div>
-        
-        <div class="map-wrapper" style="flex-grow: 1; width: 100%;">
+        <div id="view-map" class="view-section full-bleed-map" style="display: none;">
             <iframe 
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2315.398777509391!2d18.50908147681065!3d54.52646378577395!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46fda6c3ed450cd7%3A0xed5a46d20ef4a60c!2sUniwersytet%20Morski%20w%20Gdyni!5e0!3m2!1spl!2spl!4v1775852497867!5m2!1spl!2spl" 
                 width="100%" 
@@ -543,23 +592,21 @@
                 referrerpolicy="no-referrer-when-downgrade">
             </iframe>
         </div>
-    </div>
-</div>
         
     </main>
 
     <nav class="bottom-nav">
         <div class="bottom-nav-item active" data-target="schedule">
-            <i class="far fa-calendar-alt"></i>
-            <span>Schedule</span>
+            <i class="fas fa-calendar-alt"></i>
+            <span>PLAN</span>
         </div>
         <div class="bottom-nav-item" data-target="organizers">
-            <i class="fas fa-users"></i>
-            <span>Contact</span>
+            <i class="fas fa-info-circle"></i>
+            <span>INFO</span>
         </div>
         <div class="bottom-nav-item" data-target="map">
-            <i class="fas fa-map-marker-alt"></i>
-            <span>Map</span>
+            <i class="fas fa-map-marked-alt"></i>
+            <span>MAP</span>
         </div>
     </nav>
 
