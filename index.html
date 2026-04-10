@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polish-German Joint Seminar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #000000;
+            --panel-bg: #0f0f0f;
+            --hover-bg: #2a2a2a;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --accent-color: #ff6b6b;
+            --border-color: #333333;
+            --nav-width: 250px;
+            --bottom-nav-height: 70px;
+            --top-bar-height: 60px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--top-bar-height);
+            background-color: var(--bg-color);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .side-menu {
+            position: fixed;
+            top: var(--top-bar-height);
+            left: -100%;
+            width: var(--nav-width);
+            height: calc(100vh - var(--top-bar-height) - var(--bottom-nav-height));
+            background-color: var(--panel-bg);
+            transition: left 0.3s ease;
+            z-index: 90;
+            overflow-y: auto;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .side-menu.active {
+            left: 0;
+        }
+
+        .menu-list {
+            list-style: none;
+            flex-grow: 1;
+            padding-top: 10px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: var(--hover-bg);
+        }
+
+        .menu-item i {
+            width: 30px;
+            font-size: 20px;
+            margin-right: 15px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .menu-footer {
+            padding: 20px;
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            margin-top: var(--top-bar-height);
+            margin-bottom: var(--bottom-nav-height);
+            padding: 20px;
+            overflow-y: auto;
+            width: 100%;
+            transition: margin-left 0.3s ease;
+        }
+
+        @media (min-width: 768px) {
+            .side-menu.active ~ .main-content {
+                margin-left: var(--nav-width);
+                width: calc(100% - var(--nav-width));
+            }
+        }
+
+        .day-section {
+            background-color: var(--panel-bg);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .day-header {
+            display: flex;
+            align-items: baseline;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .day-header i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .day-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .day-date {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .event-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .event-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 20px;
+            border-bottom: 1px solid #1a1a1a;
+        }
+        
+        .event-item:last-child {
+            border-bottom: none;
+        }
+
+        .event-time {
+            font-size: 14px;
+            width: 90px;
+            flex-shrink: 0;
+            color: var(--text-muted);
+        }
+
+        .event-details {
+            text-align: right;
+            flex-grow: 1;
+            padding-left: 15px;
+        }
+
+        .event-name {
+            font-weight: 500;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            line-height: 1.4;
+        }
+
+        .event-location {
+            color: var(--accent-color);
+            font-size: 12px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: var(--bottom-nav-height);
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+            z-index: 100;
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            flex-grow: 1;
+            height: 100%;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .bottom-nav-item i {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .bottom-nav-item span {
+            font-size: 12px;
+        }
+
+        .bottom-nav-item.active {
+            color: var(--accent-color);
+            border-top: 2px solid var(--accent-color);
+            margin-top: -2px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <button class="menu-toggle" id="menuToggleBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="page-title" id="pageTitle">Schedule</div>
+    </div>
+
+    <nav class="side-menu" id="sideMenu">
+        <ul class="menu-list">
+            <li><a class="menu-item active" data-target="schedule"><i class="far fa-calendar-alt"></i> Schedule</a></li>
+            <li><a class="menu-item" data-target="organizers"><i class="fas fa-users"></i> Contact</a></li>
+            <li><a class="menu-item" data-target="map"><i class="fas fa-map-marker-alt"></i> Map</a></li>
+        </ul>
+        <div class="menu-footer">
+            Joint Seminar App
+        </div>
+    </nav>
+
+    <main class="main-content" id="mainContent">
+        <div id="view-schedule" class="view-section">
+            
+            <div class="day-section">
+                <div class="day-header">
+                    <span class="day-title">Wednesday</span>
+                    <span class="day-date">06.05.2026</span>
+                </div>
+                <div class="event-list">
+                    <div class="event-item">
+                        <div class="event-time">12:50</div>
+                        <div class="event-details">
+                            <div class="event-name">Arrival and accommodation <i class="fas fa-suitcase-rolling"></i></div>
+                            <div class="event-location">GMU Hostel</div>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-time">15:00-16:30</div>
+                        <div class="event-details">
+                            <div class="event-name">Lunch <i class="fas fa-utensils"></i></div>
+                            <div class="event-location">GMU canteen</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="day-section">
+                <div class="day-header">
+                    <span class="day-title">Thursday</span>
+                    <span class="day-date">07.05.2026</span>
+                </div>
+                <div class="event-list">
+                    <div class="event-item">
+                        <div class="event-time">09:00-09:45</div>
+                        <div class="event-details">
+                            <div class="event-name">Breakfast <i class="fas fa-coffee"></i></div>
+                            <div class="event-location">GMU canteen</div>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-time">10:00-11:00</div>
+                        <div class="event-details">
+                            <div class="event-name">Official Welcome & Presentations <i class="fas fa-handshake"></i></div>
+                            <div class="event-location">GMU Authorities & Student Parliament</div>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-time">11:30-13:00</div>
+                        <div class="event-details">
+                            <div class="event-name">Managing Cultural Diversity in Europe, part I <i class="fas fa-chalkboard-teacher"></i></div>
+                            <div class="event-location">Prof. Gerhard M. Feldmeier | Room – CSR, 2nd floor</div>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-time">13:30-14:30</div>
+                        <div class="event-details">
+                            <div class="event-name">Energy transition and decarbonization of maritime transport... <i class="fas fa-ship"></i></div>
+                            <div class="event-location">Prof. Maciej Matczak | Room – CSR, 2nd floor</div>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-time">15:00-16:00</div>
+                        <div class="event-details">
+                            <div class="event-name">Lunch with University and Faculty Authorities <i class="fas fa-utensils"></i></div>
+                            <div class="event-location">GMU canteen</div>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-time">17:00-19:00</div>
+                        <div class="event-details">
+                            <div class="event-name">Climbing <i class="fas fa-mountain"></i></div>
+                            <div class="event-location">TBA</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="day-section">
+                <div class="day-header">
+                    <span class="day-title">Friday</span>
+                    <span class="day-date">08.05.2026</span>
+                </div>
+                <div class="event-list">
+                    <div class="event-item">
+                        <div class="event-time">09:00-09:45</div>
+                        <div class="event-details">
+                            <div class="event-name">Breakfast <i class="fas fa-coffee"></i></div>
+                            <div class="event-location">GMU canteen</div>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-time">10:00-11:30</div>
+                        <div class="event-details">
+                            <div class="event-name">Managing Cultural Diversity in Europe, part II <i class="fas fa-chalkboard-teacher"></i></div>
+                            <div class="event-location">Prof. Gerhard M. Feldmeier | Room – CSR, 2nd floor</div>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-time">11:45-13:30</div>
+                        <div class="event-details">
+                            <div class="event-name">The role of interpersonal communication in business <i class="fas fa-comments"></i></div>
+                            <div class="event-location">PhD Agnieszka Czarnecką | Room – CSR, 2nd floor</div>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-time">13:45-14:45</div>
+                        <div class="event-details">
+                            <div class="event-name">Lunch <i class="fas fa-utensils"></i></div>
+                            <div class="event-location">GMU canteen</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="day-section">
+                <div class="day-header">
+                    <span class="day-title">Saturday</span>
+                    <span class="day-date">09.05.2026</span>
+                </div>
+                <div class="event-list">
+                    <div class="event-item">
+                        <div class="event-time">09:00-09:30</div>
+                        <div class="event-details">
+                            <div class="event-name">Breakfast <i class="fas fa-coffee"></i></div>
+                            <div class="event-location">GMU canteen</div>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-time">10:30-14:30</div>
+                        <div class="event-details">
+                            <div class="event-name">Travel by train to Gdańsk & Sightseeing <i class="fas fa-train"></i></div>
+                            <div class="event-location">Gdańsk Old Town</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="day-section">
+                <div class="day-header">
+                    <span class="day-title">Sunday</span>
+                    <span class="day-date">10.05.2026</span>
+                </div>
+                <div class="event-list">
+                    <div class="event-item">
+                        <div class="event-time">08:00-08:45</div>
+                        <div class="event-details">
+                            <div class="event-name">Breakfast <i class="fas fa-coffee"></i></div>
+                            <div class="event-location">GMU canteen</div>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-time">08:45-11:00</div>
+                        <div class="event-details">
+                            <div class="event-name">Travel by bus to Malbork <i class="fas fa-bus"></i></div>
+                            <div class="event-location">Malbork</div>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-time">11:00-13:30</div>
+                        <div class="event-details">
+                            <div class="event-name">Tour of the Castle of Malbork <i class="fab fa-fort-awesome"></i></div>
+                            <div class="event-location">Malbork Castle</div>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-time">14:30-15:30</div>
+                        <div class="event-details">
+                            <div class="event-name">Lunch <i class="fas fa-utensils"></i></div>
+                            <div class="event-location">Restaurant “Gościniec & Hotel”</div>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-time">16:30</div>
+                        <div class="event-details">
+                            <div class="event-name">Departure to Gdynia <i class="fas fa-bus"></i></div>
+                            <div class="event-location">Return Journey</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="day-section">
+                <div class="day-header">
+                    <span class="day-title">Monday</span>
+                    <span class="day-date">11.05.2026</span>
+                </div>
+                <div class="event-list">
+                    <div class="event-item">
+                        <div class="event-time">07:00-07:45</div>
+                        <div class="event-details">
+                            <div class="event-name">Breakfast <i class="fas fa-coffee"></i></div>
+                            <div class="event-location">GMU canteen</div>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-time">08:50-10:20</div>
+                        <div class="event-details">
+                            <div class="event-name">Travel by train <i class="fas fa-train"></i></div>
+                            <div class="event-location">Gdynia Główna to Hel</div>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-time">11:00-13:00</div>
+                        <div class="event-details">
+                            <div class="event-name">Lectures, Sealarium Visit & Hands-on Activities <i class="fas fa-water"></i></div>
+                            <div class="event-location">Hel Marine Station</div>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-time">13:00-14:00</div>
+                        <div class="event-details">
+                            <div class="event-name">Lunch <i class="fas fa-utensils"></i></div>
+                            <div class="event-location">Restaurant “Kuter”</div>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-time">17:20-18:50</div>
+                        <div class="event-details">
+                            <div class="event-name">Departure to Gdynia <i class="fas fa-train"></i></div>
+                            <div class="event-location">Return Journey</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="day-section">
+                <div class="day-header">
+                    <span class="day-title">Tuesday</span>
+                    <span class="day-date">12.05.2026</span>
+                </div>
+                <div class="event-list">
+                    <div class="event-item">
+                        <div class="event-time">07:00</div>
+                        <div class="event-details">
+                            <div class="event-name">Departure with Lunch-Box <i class="fas fa-plane-departure"></i></div>
+                            <div class="event-location">From GMU Hostel to Gdańsk airport</div>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-time">09:40</div>
+                        <div class="event-details">
+                            <div class="event-name">Departure to Hamburg <i class="fas fa-plane"></i></div>
+                            <div class="event-location">Gdańsk airport</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="view-organizers" class="view-section" style="display: none;">
+            <h2>Contact & Organizers Content Goes Here</h2>
+        </div>
+
+        <div id="view-map" class="view-section" style="display: none; height: 100%;">
+    <div class="day-section" style="height: calc(100vh - 180px); display: flex; flex-direction: column;">
+        <div class="day-header">
+            <i class="fas fa-map-marked-alt"></i>
+            <span class="day-title">Event Map</span>
+        </div>
+        
+        <div class="map-wrapper" style="flex-grow: 1; width: 100%;">
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2315.398777509391!2d18.50908147681065!3d54.52646378577395!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46fda6c3ed450cd7%3A0xed5a46d20ef4a60c!2sUniwersytet%20Morski%20w%20Gdyni!5e0!3m2!1spl!2spl!4v1775852497867!5m2!1spl!2spl" 
+                width="100%" 
+                height="100%" 
+                style="border:0;" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+    </div>
+</div>
+        
+    </main>
+
+    <nav class="bottom-nav">
+        <div class="bottom-nav-item active" data-target="schedule">
+            <i class="far fa-calendar-alt"></i>
+            <span>Schedule</span>
+        </div>
+        <div class="bottom-nav-item" data-target="organizers">
+            <i class="fas fa-users"></i>
+            <span>Contact</span>
+        </div>
+        <div class="bottom-nav-item" data-target="map">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>Map</span>
+        </div>
+    </nav>
+
+    <script>
+        const menuToggleBtn = document.getElementById('menuToggleBtn');
+        const sideMenu = document.getElementById('sideMenu');
+        const pageTitle = document.getElementById('pageTitle');
+        const sideMenuItems = document.querySelectorAll('.side-menu .menu-item');
+        const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
+        const viewSections = document.querySelectorAll('.view-section');
+
+        menuToggleBtn.addEventListener('click', () => {
+            sideMenu.classList.toggle('active');
+        });
+
+        function switchView(targetViewId, titleText) {
+            pageTitle.innerText = titleText;
+            viewSections.forEach(section => {
+                section.style.display = 'none';
+            });
+            const targetSection = document.getElementById(`view-${targetViewId}`);
+            if (targetSection) {
+                targetSection.style.display = 'block';
+            }
+            sideMenuItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('data-target') === targetViewId) {
+                    item.classList.add('active');
+                }
+            });
+            bottomNavItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('data-target') === targetViewId) {
+                    item.classList.add('active');
+                }
+            });
+            if (window.innerWidth < 768) {
+                sideMenu.classList.remove('active');
+            }
+        }
+
+        sideMenuItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                const target = e.currentTarget.getAttribute('data-target');
+                const title = e.currentTarget.innerText.trim();
+                switchView(target, title);
+            });
+        });
+
+        bottomNavItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                const target = e.currentTarget.getAttribute('data-target');
+                const title = e.currentTarget.querySelector('span').innerText.trim();
+                switchView(target, title);
+            });
+        });
+    </script>
+</body>
+</html>
